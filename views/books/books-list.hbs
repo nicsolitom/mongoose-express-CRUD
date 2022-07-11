@@ -1,14 +1,21 @@
 <h1>List of books in our database</h1>
 
 {{#each booksArr}}
-    <section class="book-summary">
-        <h2>{{this.title}}</h2>
-        <p>
-            Author: {{this.author}} <br />
-            Rating: {{this.rating}} <br />
-            <a href="/books/{{this.id}}">More details</a>
-            <a href="/books/{{this.id}}/edit">Edit</a>
-        </p>
+  <section class="book-summary">
+    <h2>{{this.title}}</h2>
+    <p>
+      Author:
+      {{this.author}}
+      <br />
+      Rating:
+      {{this.rating}}
+      <br />
+      <a href="/books/{{this.id}}">More details</a>
+      <a href="/books/{{this.id}}/edit">Edit</a>
+    </p>
+      <form action="/books/{{this.id}}/delete" method="POST">
+        <button>Delete</button>
+      </form>
 
-    </section>
+  </section>
 {{/each}}
