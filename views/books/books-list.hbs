@@ -5,12 +5,13 @@
     <h2>{{this.title}}</h2>
     <p>
       Author:
-      {{this.author}}
+      {{this.author.name}}
       <br />
       Rating:
       {{this.rating}}
       <br />
       <a href="/books/{{this.id}}">More details</a>
+      |
       <a href="/books/{{this.id}}/edit">Edit</a>
     </p>
       <form action="/books/{{this.id}}/delete" method="POST">
