@@ -3,9 +3,9 @@ const Author = require("../models/Author.model");
 
 const router = require("express").Router();
 
-router.get("/books", (req, res, next) => {
-  // if(req.query.bookSearch) {}
+const checkIfLoggedIn = require("../middleware/checkIfLoggedIn")
 
+router.get("/books", (req, res, next) => {
   Book.find()
     .populate("author")
     .then((booksFromDB) => {
@@ -20,7 +20,7 @@ router.get("/books", (req, res, next) => {
     });
 });
 
-router.get("/books/create", (req, res) => {
+router.get("/books/create", checkIfLoggedIn, (req, res) => {
   Author.find()
     .then((authorsFromDB) => {
       res.render("books/book-create", {authorsFromDB});
@@ -31,7 +31,7 @@ router.get("/books/create", (req, res) => {
     });
 });
 
-router.post("/books/create", (req, res) => {
+router.post("/books/create", checkIfLoggedIn, (req, res) => {
   const bookDetails = {
     title: req.body.title,
     author: req.body.author,
@@ -48,7 +48,21 @@ router.post("/books/create", (req, res) => {
     });
 });
 
-router.get("/books/:bookId/edit", (req, res) => {
+router.get("/books/:bookId", (req, res, next) => {
+  const bookId = req.params.bookId;
+
+  Book.findById(bookId)
+    .populate("author")
+    .then((bookDetails) => {
+      res.render("books/book-details", bookDetails);
+    })
+    .catch((error) => {
+      console.log("Error getting authors from DB", error);
+      next(error);
+    });
+});
+
+router.get("/books/:bookId/edit", checkIfLoggedIn, (req, res) => {
   const { bookId } = req.params;
 
   Book.findById(bookId)
@@ -61,7 +75,7 @@ router.get("/books/:bookId/edit", (req, res) => {
     });
 });
 
-router.post("/books/:bookId/edit", (req, res) => {
+router.post("/books/:bookId/edit", checkIfLoggedIn, (req, res) => {
   const bookId = req.params.bookId;
 
   const newBookDetails = {
@@ -83,21 +97,8 @@ router.post("/books/:bookId/edit", (req, res) => {
     });
 });
 
-router.get("/books/:bookId", (req, res, next) => {
-  const bookId = req.params.bookId;
 
-  Book.findById(bookId)
-    .populate("author")
-    .then((bookDetails) => {
-      res.render("books/book-details", bookDetails);
-    })
-    .catch((error) => {
-      console.log("Error getting authors from DB", error);
-      next(error);
-    });
-});
-
-router.post("/books/:bookId/delete", (req, res) => {
+router.post("/books/:bookId/delete", checkIfLoggedIn, (req, res) => {
   const { bookId } = req.params;
 
   Book.findByIdAndRemove(bookId)

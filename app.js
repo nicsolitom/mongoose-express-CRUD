@@ -26,6 +26,7 @@ const projectName = "library-project";
 
 app.locals.appTitle = `${capitalized(projectName)} created with IronLauncher`;
 
+
 // 👇 Start handling routes here
 app.use("/", require("./routes/index.routes"));
 app.use("/", require("./routes/auth.routes"));
